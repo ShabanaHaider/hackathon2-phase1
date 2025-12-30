@@ -1,55 +1,182 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+==================
+Version Change: None → 1.0.0 (Initial Ratification)
+Status: Placeholder template replaced with human-authored constitution
 
-## Core Principles
+Modified Principles: N/A (all new)
+Added Sections:
+  - Purpose
+  - Scope (In Scope / Out of Scope)
+  - Technology Stack (Fixed)
+  - Agentic Dev Stack Workflow (Mandatory)
+  - Agent Roles
+  - Skills Registry
+  - Skills Enforcement
+  - Traceability Rules (Non-Negotiable)
+  - Quality Bar
+  - Amendment Policy
+  - Governing Principle
+Removed Sections: Template principles (replaced entirely)
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+Templates Status:
+  ✅ .specify/memory/constitution.md - Updated (this file)
+  ⚠ .specify/templates/plan-template.md - May need review for Constitution Check alignment
+  ⚠ .specify/templates/spec-template.md - May need review for scope/requirements alignment
+  ⚠ .specify/templates/tasks-template.md - May need review for task categorization
+  ⚠ .claude/commands/*.md - May need review for references
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Follow-up TODOs: None
+-->
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+# Todo CLI App Constitution
+**Phase I – In-Memory CLI Todo Application**
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+## 1. Purpose
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+This project exists to demonstrate **spec-driven, agentic software development** using:
 
-### [PRINCIPLE_6_NAME]
+- Claude Code
+- Spec-Kit Plus
+- Python 3.13+
+- UV
+- Command Line Interface (CLI)
 
+The goal is to build a **working in-memory Todo application** while strictly enforcing the **Agentic Dev Stack workflow**.
+Process correctness is as important as functional correctness.
 
-[PRINCIPLE__DESCRIPTION]
+## 2. Scope
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### In Scope
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Console-based (CLI) Todo application
+- Tasks stored entirely **in memory**
+- Five basic features:
+  1. Add task
+  2. View tasks
+  3. Update task
+  4. Delete task
+  5. Mark task complete / incomplete
+- Development via Claude Code only
+- Spec-Kit Plus artifacts for all phases
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Out of Scope
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- File or database persistence
+- GUI or web interfaces
+- Authentication or multi-user support
+- Background services or APIs
+- Manual code edits
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+## 3. Technology Stack (Fixed)
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- Python **3.13+**
+- **UV** for environment and execution
+- **Claude Code** for implementation
+- **Spec-Kit Plus** for specifications
+- **CLI-only** interaction
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+Any deviation requires an approved specification update.
+
+## 4. Agentic Dev Stack Workflow (Mandatory)
+
+All work must follow this order:
+
+1. Constitution (this document)
+2. Specification → `/sp.specify`
+3. Plan → `/sp.plan`
+4. Tasks → `/sp.tasks`
+5. Implementation → `/sp.implement`
+
+### Enforcement
+
+- No phase may begin before the previous phase is approved
+- Orchestrator must block execution on any violation
+
+## 5. Agent Roles
+
+### Orchestrator
+
+- Governs workflow enforcement
+- Verifies constitution existence
+- Approves or rejects specs, plans, and tasks
+- Authorizes implementation
+- Halts execution on violations
+
+### Sub-Agents
+
+| Agent | Responsibility |
+|-------|----------------|
+| SpecificationAgent | Functional requirements |
+| PlanningAgent | Architecture and flow |
+| TaskAgent | Task decomposition |
+| ImplementationAgent | Claude Code execution |
+
+Agents may only act within their assigned roles.
+
+## 6. Skills Registry
+
+All agents must operate within the bounds of the approved skills defined in `.claude/skills.md`.
+
+Skills define **what an agent is allowed to do**, not just what it can do.
+
+## 7. Skills Enforcement
+
+### Enforcement Rules
+
+- Orchestrator MUST enforce all declared agent skills
+- Agents MAY NOT act outside their defined skill scope
+- Undeclared or implicit skills are prohibited
+- Skill violations are treated as **spec violations**
+- Any violation MUST halt execution and require correction
+
+### Orchestrator Responsibilities
+
+Orchestrator is explicitly responsible for:
+
+- Verifying skill compliance before approving artifacts
+- Blocking unauthorized actions by any agent
+- Maintaining traceability between skills, specs, plans, tasks, and code
+- Preventing scope creep and silent behavior changes
+
+Skills enforcement applies globally unless explicitly overridden by an approved specification.
+
+## 8. Traceability Rules (Non-Negotiable)
+
+- ❌ No code without a **Task ID**
+- ❌ No task without an **approved specification**
+- ❌ No specification without this constitution
+- ❌ No manual coding
+- ✅ Every artifact must be traceable to a spec file
+- ✅ All iterations must be preserved
+
+Missing or undocumented files invalidate the workflow.
+
+## 9. Quality Bar
+
+The project is complete only when:
+
+- All five required features function correctly
+- The CLI application runs without errors
+- Code matches the approved specifications
+- Skills and workflow rules were enforced
+- The development process is fully auditable
+
+## 10. Amendment Policy
+
+This constitution may only be amended if:
+
+- A new specification explicitly requires it
+- The change is documented and approved
+- Traceability is preserved
+
+Silent or retroactive changes are prohibited.
+
+## 11. Governing Principle
+
+> **This project prioritizes disciplined, traceable, agentic development.
+> Working code without process integrity is considered incomplete.**
+
+---
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-30 | **Last Amended**: 2025-12-30

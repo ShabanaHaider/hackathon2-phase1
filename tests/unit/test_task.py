@@ -1,7 +1,7 @@
 """Unit tests for the Task model."""
 
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.models.task import Task, TaskStatus
 
@@ -21,7 +21,7 @@ class TestTaskInitialization:
 
     def test_create_task_with_all_fields(self):
         """Test creating a task with all fields."""
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         task = Task(
             id=1,
             title="Buy milk",
@@ -170,3 +170,58 @@ class TestTaskToDict:
         assert task_dict["status"] == "complete"
         assert "created_at" in task_dict
         assert "updated_at" in task_dict
+
+
+class TestTaskFromDict:
+    """Tests for Task.from_dict() classmethod."""
+
+    def test_from_dict_creates_task(self):
+        """Test that from_dict creates a task from a dictionary."""
+        now = datetime.now(timezone.utc)
+        data = {
+            "id": 1,
+            "title": "Test",
+            "description": "Desc",
+            "status": "complete",
+            "created_at": now.isoformat(),
+            "updated_at": now.isoformat(),
+        }
+
+        task = Task.from_dict(data)
+
+        assert task.id == 1
+        assert task.title == "Test"
+        assert task.description == "Desc"
+        assert task.status == TaskStatus.COMPLETE
+
+    def test_from_dict_with_empty_description(self):
+        """Test that from_dict handles missing description."""
+        now = datetime.now(timezone.utc)
+        data = {
+            "id": 1,
+            "title": "Test",
+            "status": "incomplete",
+            "created_at": now.isoformat(),
+            "updated_at": now.isoformat(),
+        }
+
+        task = Task.from_dict(data)
+
+        assert task.description == ""
+
+    def test_from_dict_roundtrip(self):
+        """Test that to_dict and from_dict are inverses."""
+        original = Task(
+            id=42,
+            title="Buy milk",
+            description="Get 2% milk",
+            status=TaskStatus.COMPLETE,
+        )
+
+        task_dict = original.to_dict()
+        restored = Task.from_dict(task_dict)
+
+        assert restored.id == original.id
+        assert restored.title == original.title
+        assert restored.description == original.description
+        assert restored.status == original.status

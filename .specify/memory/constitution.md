@@ -1,30 +1,28 @@
 <!--
 Sync Impact Report
 ==================
-Version Change: None → 1.0.0 (Initial Ratification)
-Status: Placeholder template replaced with human-authored constitution
+Version Change: 1.0.0 → 1.0.1 (MINOR)
+Status: Advanced features added (priority, category, due date)
 
-Modified Principles: N/A (all new)
-Added Sections:
-  - Purpose
-  - Scope (In Scope / Out of Scope)
-  - Technology Stack (Fixed)
-  - Agentic Dev Stack Workflow (Mandatory)
-  - Agent Roles
-  - Skills Registry
-  - Skills Enforcement
-  - Traceability Rules (Non-Negotiable)
-  - Quality Bar
-  - Amendment Policy
-  - Governing Principle
-Removed Sections: Template principles (replaced entirely)
+Modified Principles: None (content expanded)
+Added Features to Scope:
+  - Priority assignment (high/medium/low)
+  - Category organization
+  - Due date tracking
+Updated Sections:
+  - Scope (In Scope): Now 8 features (was 5)
+  - Agent Roles: Added InputValidationAgent
+  - Quality Bar: All 8 features must function correctly
+  - Agent Roles table: Expanded from 4 to 5 agents
+
+Removed Sections: None
 
 Templates Status:
   ✅ .specify/memory/constitution.md - Updated (this file)
-  ⚠ .specify/templates/plan-template.md - May need review for Constitution Check alignment
-  ⚠ .specify/templates/spec-template.md - May need review for scope/requirements alignment
-  ⚠ .specify/templates/tasks-template.md - May need review for task categorization
-  ⚠ .claude/commands/*.md - May need review for references
+  ✅ .specify/templates/plan-template.md - No changes needed (constitution check section exists)
+  ✅ .specify/templates/spec-template.md - No changes needed (already flexible)
+  ✅ .specify/templates/tasks-template.md - No changes needed (already flexible)
+  ℹ️ .specify/templates/commands/ - No command files present
 
 Follow-up TODOs: None
 -->
@@ -51,12 +49,15 @@ Process correctness is as important as functional correctness.
 
 - Console-based (CLI) Todo application
 - Tasks stored entirely **in memory**
-- Five basic features:
+- Eight core features:
   1. Add task
   2. View tasks
   3. Update task
   4. Delete task
   5. Mark task complete / incomplete
+  6. Assign priority (high/medium/low)
+  7. Categorize tasks
+  8. Set due dates
 - Development via Claude Code only
 - Spec-Kit Plus artifacts for all phases
 
@@ -111,6 +112,7 @@ All work must follow this order:
 | PlanningAgent | Architecture and flow |
 | TaskAgent | Task decomposition |
 | ImplementationAgent | Claude Code execution |
+| InputValidationAgent | Input validation and error handling |
 
 Agents may only act within their assigned roles.
 
@@ -156,7 +158,7 @@ Missing or undocumented files invalidate the workflow.
 
 The project is complete only when:
 
-- All five required features function correctly
+- All eight required features function correctly
 - The CLI application runs without errors
 - Code matches the approved specifications
 - Skills and workflow rules were enforced
@@ -179,4 +181,4 @@ Silent or retroactive changes are prohibited.
 
 ---
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-30 | **Last Amended**: 2025-12-30
+**Version**: 1.0.1 | **Ratified**: 2025-12-30 | **Last Amended**: 2026-01-01

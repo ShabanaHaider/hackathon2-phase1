@@ -2,10 +2,13 @@
 
 import json
 import os
+from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional
+from dataclasses import dataclass
+from datetime import date
 
-from src.models.task import Task, TaskStatus
+from src.models.task import Task, TaskStatus, TaskPriority, TaskCategory
 
 
 class TaskNotFoundError(Exception):
@@ -14,6 +17,40 @@ class TaskNotFoundError(Exception):
     def __init__(self, task_id: int) -> None:
         self.task_id = task_id
         super().__init__(f"Task {task_id} not found")
+
+
+@dataclass
+class TaskFilter:
+    """Criteria for filtering tasks."""
+
+    status: Optional[TaskStatus] = None
+    priority: Optional[TaskPriority] = None
+    category: Optional[TaskCategory] = None
+    due_date: Optional[date] = None
+    keyword: Optional[str] = None
+
+
+class TaskSortBy(Enum):
+    """Sort options for tasks."""
+
+    DUE_DATE = "due_date"
+    PRIORITY = "priority"
+    TITLE = "title"
+
+
+class TaskSortOrder(Enum):
+    """Sort order options."""
+
+    ASC = "asc"
+    DESC = "desc"
+
+
+@dataclass
+class TaskSort:
+    """Criteria for sorting tasks."""
+
+    by: TaskSortBy
+    order: TaskSortOrder = TaskSortOrder.ASC
 
 
 # Default storage file path (user's home directory)
@@ -91,12 +128,22 @@ class TaskStore:
             with open(self._storage_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
 
-    def add(self, title: str, description: str = "") -> Task:
+    def add(
+        self,
+        title: str,
+        description: str = "",
+        priority: Optional[TaskPriority] = None,
+        category: Optional[TaskCategory] = None,
+        due_date: Optional[date] = None,
+    ) -> Task:
         """Add a new task to the store.
 
         Args:
             title: The task title (required).
             description: The task description (optional).
+            priority: The task priority (optional, defaults to MEDIUM).
+            category: The task category (optional, defaults to UNCATEGORIZED).
+            due_date: The task due date (optional).
 
         Returns:
             The newly created Task.
@@ -117,6 +164,9 @@ class TaskStore:
             title=title.strip(),
             description=description,
             status=TaskStatus.INCOMPLETE,
+            priority=priority or TaskPriority.MEDIUM,
+            category=category or TaskCategory.UNCATEGORIZED,
+            due_date=due_date,
         )
         self._tasks[task_id] = task
         self._next_id += 1
@@ -159,15 +209,87 @@ class TaskStore:
         """
         return [self._tasks[task_id] for task_id in sorted(self._tasks.keys())]
 
+    def filter(self, task_filter: TaskFilter) -> List[Task]:
+        """Filter tasks by criteria.
+
+        Args:
+            task_filter: Filter criteria including status, priority, category, due_date, and/or keyword.
+
+        Returns:
+            List of tasks matching all specified criteria.
+        """
+        tasks = self.get_all()
+
+        if task_filter.status is not None:
+            tasks = [t for t in tasks if t.status == task_filter.status]
+
+        if task_filter.priority is not None:
+            tasks = [t for t in tasks if t.priority == task_filter.priority]
+
+        if task_filter.category is not None:
+            tasks = [t for t in tasks if t.category == task_filter.category]
+
+        if task_filter.due_date is not None:
+            tasks = [t for t in tasks if t.due_date == task_filter.due_date]
+
+        if task_filter.keyword is not None:
+            keyword_lower = task_filter.keyword.lower()
+            tasks = [t for t in tasks if keyword_lower in t.title.lower() or keyword_lower in t.description.lower()]
+
+        return tasks
+
+    def sort(self, tasks: List[Task], task_sort: TaskSort) -> List[Task]:
+        """Sort tasks by criteria.
+
+        Args:
+            tasks: List of tasks to sort.
+            task_sort: Sort criteria including field and order.
+
+        Returns:
+            Sorted list of tasks.
+        """
+        reverse = task_sort.order == TaskSortOrder.DESC
+
+        if task_sort.by == TaskSortBy.DUE_DATE:
+            # Tasks without due dates sort to the end
+            return sorted(
+                tasks,
+                key=lambda t: (t.due_date is None, t.due_date or date.max),
+                reverse=reverse,
+            )
+        elif task_sort.by == TaskSortBy.PRIORITY:
+            # Priority order: HIGH > MEDIUM > LOW
+            priority_order = {
+                TaskPriority.HIGH: 1,
+                TaskPriority.MEDIUM: 2,
+                TaskPriority.LOW: 3,
+            }
+            return sorted(
+                tasks, key=lambda t: priority_order.get(t.priority, 4), reverse=reverse
+            )
+        elif task_sort.by == TaskSortBy.TITLE:
+            return sorted(tasks, key=lambda t: t.title.lower(), reverse=reverse)
+
+        return tasks
+
     def update(
-        self, task_id: int, title: Optional[str] = None, description: Optional[str] = None
+        self,
+        task_id: int,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        priority: Optional[TaskPriority] = None,
+        category: Optional[TaskCategory] = None,
+        due_date: Optional[date] = None,
     ) -> Task:
-        """Update a task's title and/or description.
+        """Update a task's attributes.
 
         Args:
             task_id: The ID of the task to update.
             title: New title (optional).
             description: New description (optional).
+            priority: New priority (optional).
+            category: New category (optional).
+            due_date: New due date (optional, can be None to clear).
 
         Returns:
             The updated Task.
@@ -176,8 +298,14 @@ class TaskStore:
             TaskNotFoundError: If the task is not found.
             ValueError: If no changes provided or validation fails.
         """
-        if title is None and description is None:
-            raise ValueError("No changes provided (use --title and/or --description)")
+        if (
+            title is None
+            and description is None
+            and priority is None
+            and category is None
+            and due_date is None
+        ):
+            raise ValueError("No changes provided")
 
         task = self.get_by_id_or_raise(task_id)
 
@@ -185,6 +313,12 @@ class TaskStore:
             task.update_title(title)
         if description is not None:
             task.update_description(description)
+        if priority is not None:
+            task.update_priority(priority)
+        if category is not None:
+            task.update_category(category)
+        if due_date is not None:
+            task.update_due_date(due_date)
 
         self._save()
         return task

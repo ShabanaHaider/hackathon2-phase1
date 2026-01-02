@@ -9,6 +9,7 @@ authors = [{ name = "Todo App User" }]
 
 dependencies = [
     "click>=8.0",
+    "plyer>=2.1.0",
 ]
 
 [project.optional-dependencies]

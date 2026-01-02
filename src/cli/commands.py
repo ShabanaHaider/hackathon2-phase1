@@ -295,5 +295,17 @@ def incomplete(task_id: int) -> None:
         sys.exit(1)
 
 
+@main.command("menu")
+def menu() -> None:
+    """Launch the interactive menu system."""
+    from src.cli.menu import main_menu_loop
+    main_menu_loop()
+
+
 if __name__ == "__main__":
-    main()
+    # If no command is provided, launch the interactive menu
+    if len(sys.argv) == 1:
+        from src.cli.menu import main_menu_loop
+        main_menu_loop()
+    else:
+        main()
